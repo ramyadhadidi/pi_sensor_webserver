@@ -107,7 +107,6 @@ draw.text((x+5, top+24), "           : %0.1f F" % ((temp*1.8)+32), fill=255)
 disp.image(image)
 disp.show()
 
-f=open("data_logs.csv","a",4)
 
 while True:
     temp = sensor.temperature
@@ -144,9 +143,12 @@ while True:
             sum_min_temp = 0.0
             sum_min_humi = 0.0
             now = datetime.now()
+
+            f=open("data_logs.csv","a",4)
             f.write("%s, %0.1f, %0.1f\n" 
                     % (now.strftime("%d-%m-%Y %H:%M"), half_hr_temp, half_hr_humi))
             f.flush()
+            f.close()
         
         min_counter=min_counter + 1
     screen_counter = screen_counter + 1

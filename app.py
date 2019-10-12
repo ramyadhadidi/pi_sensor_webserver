@@ -10,10 +10,10 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+df = 0
 
-
-def update_df():
-    df = pd.read_csv("/home/pi/data_logs.csv", 
+with open("data_logs.csv", "r") as f:
+    df = pd.read_csv(f, 
                     header=None, 
                     names=['timestamp', 'temp', 'humi'],
                     index_col=False,
@@ -24,24 +24,31 @@ def update_df():
     df['day'] = pd.DatetimeIndex(df['timestamp']).day
     df['date'] =  df['timestamp'].dt.date
     df['time'] =  df['timestamp'].dt.time
-    df=df[::-1]
+    df = df[::-1]
     df = df.reset_index(drop=True)
+    f.close()
+
+
+def update_df():
+    with open("data_logs.csv", "r") as f:
+        df = pd.read_csv(f,
+                        header=None, 
+                        names=['timestamp', 'temp', 'humi'],
+                        index_col=False,
+                        )
+        df['timestamp'] =  pd.to_datetime(df['timestamp'], format="%d-%m-%Y %H:%M")
+        df['year'] = pd.DatetimeIndex(df['timestamp']).year
+        df['month'] = pd.DatetimeIndex(df['timestamp']).month
+        df['day'] = pd.DatetimeIndex(df['timestamp']).day
+        df['date'] =  df['timestamp'].dt.date
+        df['time'] =  df['timestamp'].dt.time
+        df=df[::-1]
+        df = df.reset_index(drop=True)
+        f.close()
+    return df
 
 
 
-df = pd.read_csv("/home/pi/data_logs.csv", 
-                header=None, 
-                names=['timestamp', 'temp', 'humi'],
-                index_col=False,
-                )
-df['timestamp'] =  pd.to_datetime(df['timestamp'], format="%d-%m-%Y %H:%M")
-df['year'] = pd.DatetimeIndex(df['timestamp']).year
-df['month'] = pd.DatetimeIndex(df['timestamp']).month
-df['day'] = pd.DatetimeIndex(df['timestamp']).day
-df['date'] =  df['timestamp'].dt.date
-df['time'] =  df['timestamp'].dt.time
-df = df[::-1]
-df = df.reset_index(drop=True)
 
 
 app.layout = html.Div(children=[
@@ -126,7 +133,7 @@ app.layout = html.Div(children=[
      Output('range-drop', 'options')],
     [Input('range-drop', 'value')])
 def update_range(value):
-    update_df()
+    df = update_df()
     if value=='All':
         return  'Current Range is "{}"'.format(str(value)), { ###
                 'data': [
