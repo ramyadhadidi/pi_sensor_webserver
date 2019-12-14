@@ -144,7 +144,7 @@ while True:
             sum_min_humi = 0.0
             now = datetime.now()
 
-            f=open("data_logs.csv","a",4)
+            f=open("/home/pi/data_logs.csv","a",4)
             f.write("%s, %0.1f, %0.1f\n" 
                     % (now.strftime("%d-%m-%Y %H:%M"), half_hr_temp, half_hr_humi))
             f.flush()
