@@ -39,3 +39,5 @@ sudo python3 /home/pi/boot_oled.py > /dev/null 2>&1
 sudo python3 /home/pi/update_oled.py > /dev/null 2>&1 &
 sudo python3 /home/pi/app.py > /dev/null 2>&1 &
 ```
+## Additional Tools On My Pi
+* Network Wide ad Blocker: [Pi-Hole](https://github.com/pi-hole/pi-hole)
