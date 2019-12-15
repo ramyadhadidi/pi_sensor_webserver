@@ -41,3 +41,6 @@ sudo python3 /home/pi/app.py > /dev/null 2>&1 &
 ```
 ## Additional Tools On My Pi
 * Network Wide ad Blocker: [Pi-Hole](https://github.com/pi-hole/pi-hole)
+* Always install fail2ban
+* Additional blacklists for your Pi-Hole: https://firebog.net/
+* DNS over HTTPS [cloudflared]
