@@ -86,7 +86,11 @@ draw.rectangle((0, 0, width, height), outline=0, fill=0)
 cmd = "hostname -I | cut -d\' \' -f1"
 IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
 
-SCREEN_UPDATE = 15 #in sec
+
+cmd_wttr = 'curl wttr.in/30067?format="%C+%t&m"'
+wttr = subprocess.check_output(cmd_wttr, shell=True).decode("utf-8")
+
+SCREEN_UPDATE = 30 #in sec
 MINUTE_LOG = 60/SCREEN_UPDATE
 PERIOD_LOG = 30 #in mins
 
@@ -100,10 +104,10 @@ sum_min_humi = 0.0
 
 temp = sensor.temperature
 humi = sensor.relative_humidity
-draw.text((x, top), "IP: "+IP, fill=255)
-draw.text((x+5, top+8), "Humidity: %0.1f %%" % humi, fill=255)
-draw.text((x+5, top+16), "Temperature: %0.1f C" % temp, fill=255)
-draw.text((x+5, top+24), "           : %0.1f F" % ((temp*1.8)+32), fill=255)
+draw.text((x, top), wttr, fill=255)
+draw.text((x+5, top+8), "Hmdt: %0.1f %%" % humi, fill=255)
+draw.text((x+5, top+16), "Tmp: %0.1f C" % temp, fill=255)
+draw.text((x+5, top+24), "   : %0.1f F" % ((temp*1.8)+32), fill=255)
 disp.image(image)
 disp.show()
 
@@ -113,10 +117,10 @@ while True:
     humi = sensor.relative_humidity
 
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
-    draw.text((x, top), "IP: "+IP, fill=255)
-    draw.text((x+5, top+8), "Humidity: %0.1f %%" % humi, fill=255)
-    draw.text((x+5, top+16), "Temperature: %0.1f C" % temp, fill=255)
-    draw.text((x+5, top+24), "           : %0.1f F" % ((temp*1.8)+32), fill=255)
+    draw.text((x, top), wttr, fill=255)
+    draw.text((x+5, top+8), "Hmdt: %0.1f %%" % humi, fill=255)
+    draw.text((x+5, top+16), "Tmp: %0.1f C" % temp, fill=255)
+    draw.text((x+5, top+24), "   : %0.1f F" % ((temp*1.8)+32), fill=255)
     disp.image(image)
     disp.show()
     time.sleep(SCREEN_UPDATE)
@@ -137,6 +141,9 @@ while True:
             cmd = "hostname -I | cut -d\' \' -f1"
             IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
 
+            cmd_wttr = 'curl wttr.in/30067?format="%C+%t&m"'
+            wttr = subprocess.check_output(cmd_wttr, shell=True).decode("utf-8")
+
             min_counter = 0
             half_hr_temp = sum_min_temp/PERIOD_LOG
             half_hr_humi = sum_min_humi/PERIOD_LOG
@@ -145,8 +152,8 @@ while True:
             now = datetime.now()
 
             f=open("/home/pi/data_logs.csv","a",4)
-            f.write("%s, %0.1f, %0.1f\n" 
-                    % (now.strftime("%d-%m-%Y %H:%M"), half_hr_temp, half_hr_humi))
+            f.write("%s, %0.1f, %0.1f, %s\n" 
+                    % (now.strftime("%d-%m-%Y %H:%M"), half_hr_temp, half_hr_humi, wttr))
             f.flush()
             f.close()
         
