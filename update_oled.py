@@ -87,10 +87,14 @@ cmd = "hostname -I | cut -d\' \' -f1"
 IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
 
 
+wttr = ''
 cmd_wttr = 'curl wttr.in/30067?format="%C+%t&m"'
-wttr = subprocess.check_output(cmd_wttr, shell=True).decode("utf-8")
+try:
+    wttr = subprocess.check_output(cmd_wttr, shell=True).decode("utf-8")
+except subprocess.CalledProcessError:
+    wttr = ''
 
-SCREEN_UPDATE = 30 #in sec
+SCREEN_UPDATE = 15 #in sec
 MINUTE_LOG = 60/SCREEN_UPDATE
 PERIOD_LOG = 30 #in mins
 
@@ -138,11 +142,14 @@ while True:
         #log mins data
         if min_counter==PERIOD_LOG:
             #sometimes cannot get the ip in startup
-            cmd = "hostname -I | cut -d\' \' -f1"
-            IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
+            # cmd = "hostname -I | cut -d\' \' -f1"
+            # IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
 
             cmd_wttr = 'curl wttr.in/30067?format="%C+%t&m"'
-            wttr = subprocess.check_output(cmd_wttr, shell=True).decode("utf-8")
+            try:
+                wttr = subprocess.check_output(cmd_wttr, shell=True).decode("utf-8")
+            except subprocess.CalledProcessError:
+                wttr = ''
 
             min_counter = 0
             half_hr_temp = sum_min_temp/PERIOD_LOG
