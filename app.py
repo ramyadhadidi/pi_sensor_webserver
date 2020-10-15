@@ -15,7 +15,7 @@ df = 0
 with open("data_logs.csv", "r") as f:
     df = pd.read_csv(f, 
                     header=None, 
-                    names=['timestamp', 'temp', 'humi'],
+                    names=['timestamp', 'temp', 'humi', 'out'],
                     index_col=False,
                     )
     df['timestamp'] =  pd.to_datetime(df['timestamp'], format="%d-%m-%Y %H:%M")
@@ -33,7 +33,7 @@ def update_df():
     with open("data_logs.csv", "r") as f:
         df = pd.read_csv(f,
                         header=None, 
-                        names=['timestamp', 'temp', 'humi'],
+                        names=['timestamp', 'temp', 'humi', 'out'],
                         index_col=False,
                         )
         df['timestamp'] =  pd.to_datetime(df['timestamp'], format="%d-%m-%Y %H:%M")

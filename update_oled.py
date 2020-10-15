@@ -151,6 +151,9 @@ while True:
             except subprocess.CalledProcessError:
                 wttr = ''
 
+            if '\n' in wttr or len(wttr)>20:
+                wttr = ''
+
             min_counter = 0
             half_hr_temp = sum_min_temp/PERIOD_LOG
             half_hr_humi = sum_min_humi/PERIOD_LOG
